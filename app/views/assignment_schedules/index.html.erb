@@ -1,0 +1,51 @@
+<%= content_for(:title, "Forms") %>
+<p id="notice"><%= notice %></p>
+
+<h1>Formularios</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Numero de Ensayo</th>
+      <th scope="col">Fecha Inicio</th>
+      <th scope="col">Fecha Término</th>
+      <th scope="col">Etapa</th>
+      <th scope="col">Estado</th>
+      <th colspan="3"></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @assignment_schedules.each do |assignment_schedule| %>
+      <tr>
+        <th><%= assignment_schedule.assignment_number %></th>
+        <td><%= assignment_schedule.start_date.asctime %></td>
+        <td><%= assignment_schedule.end_date.asctime %></td>
+        <th><%= assignment_schedule.stage %></th>
+        <%if Time.now > assignment_schedule.end_date%>
+          <td><font color="red"><b>Cerrado</b></font></td>
+        <%else%>
+          <td><font color="green"><b>Abierto</b></font></td>
+        <%end%>
+        <% if assignment_schedule.stage == "Segunda" && Correction.find_by(assignment_schedule_id: assignment_schedule.id).nil? %>
+          <td><%= link_to 'Generar Correcciones', assign_second_corrections_path(id: assignment_schedule), method: :post, remote: true %></td>
+        <% elsif assignment_schedule.stage == "Tercera" && Correction.find_by(assignment_schedule_id: assignment_schedule.id).nil?%>
+          <td><%= link_to 'Generar Correcciones', assign_third_corrections_path(id: assignment_schedule), method: :post, remote: true %></td>
+        <% else %>
+          <td></td>
+        <% end %>
+        <td><%= link_to 'Edit', edit_assignment_schedule_path(assignment_schedule) %></td>
+        <%if Time.now <= assignment_schedule.end_date%>
+          <td>
+            <%= link_to 'Enviar notificaciones', send_notifications_assignment_schedule_path(assignment_schedule), remote: true %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'Abrir Formulario', new_assignment_schedule_path, class: "btn btn-sm btn-primary" %>

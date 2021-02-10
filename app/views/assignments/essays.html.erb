@@ -1,0 +1,24 @@
+<%= content_for(:title, "Ensayos") %>
+<div class="container">
+<h3><b>Ensayos</b></h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Ensayo #</th>
+      <th scope="col">Ensayos Entregados</th>
+      <th scope="col">Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%unless @assignment_schedules.nil?%>
+      <% @assignment_schedules.each do |i|%>
+        <tr>
+          <th scope="row"><%=i.assignment_number%></th>
+          <td><%=i.attachments.count%></td>
+          <td><%=link_to 'Ver Ensayos', '/assignments/' + i.assignment_number.to_s + "/essays"%></td>
+        </tr>
+      <%end%>
+    <%end%>
+  </tbody>
+</table>
+</div>

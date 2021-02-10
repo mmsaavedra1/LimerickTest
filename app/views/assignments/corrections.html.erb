@@ -1,0 +1,60 @@
+<%= content_for(:title, "Correcciones") %>
+<div class="container">
+<h3><b>Correcciones</b></h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Ensayo #</th>
+      <th scope="col">C answered 2da</th>
+      <th scope="col">Pending users 2da</th>
+      <th scope="col">Segunda Etapa</th>
+      <th scope="col">C answerd 3ra</th>
+      <th scope="col">Pending users 3ra</th>
+      <th scope="col">Tercera Etapa</th>
+      <th scope="col">Puntajes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%unless @assignments.nil?%>
+      <% @assignments.each do |i|%>
+        <tr>
+          <th scope="row"><%=i.number%></th>
+          <% schedules = i.assignment_schedules.where("stage = ? OR stage = ?", AssignmentSchedule.stages[:Segunda], AssignmentSchedule.stages[:Tercera]).order(id: :asc) %>
+          <% schedules.each do |j|%>
+            <% if j.stage == "Segunda"%>
+              <td>
+                <%= j.attachments.count %>
+              </td>
+              <td>
+                <%= i.get_second_stage_late_users.count %>
+              </td>
+              <td><%=link_to 'Ver', '/assignments/' + j.assignment_number.to_s + "/second_stage_corrections/#{j.id}" %></td>
+            <% elsif j.stage == "Tercera" %>
+              <td>
+                <%= j.corrections.where.not(score: nil).count %>
+              </td>
+              <td>
+                <%= i.get_third_stage_late_users.count %>
+              </td>
+              <td><%=link_to 'Ver', '/assignments/' + j.assignment_number.to_s + "/third_stage_corrections/#{j.id}" %></td>
+            <% end %>
+          <% end %>
+          <% if schedules.count == 0 %>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          <% elsif schedules.count == 1 %>
+            <td></td>
+            <td></td>
+            <td></td>
+          <% end %>
+          <td><%=link_to 'Descargar', '/assignments/' + i.number.to_s + "/corrections.xlsx?assignment_schedule_id=#{i.id}"%></td>
+        </tr>
+      <%end%>
+    <%end%>
+  </tbody>
+</table>
+</div>

@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  corrected_user: one
+  file: 
+  score: 1
+  type: 1
+
+two:
+  corrected_user: two
+  file: 
+  score: 1
+  type: 1

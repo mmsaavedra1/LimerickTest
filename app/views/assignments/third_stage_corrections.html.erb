@@ -1,0 +1,38 @@
+<%= content_for(:title, "Corrección Ensayo #{params[:number]}") %>
+<div class="container">
+  <h3><b>Ensayo #<%=params[:number]%></b></h3>
+  <div class="row">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Alumno Corrector</th>
+          <th scope="col">Nombre Corrector</th>
+          <th scope="col">Alumno Corregido</th>
+          <th scope="col">Nombre Corregido</th>
+          <th scope="col">Puntaje</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%unless @corrections.nil? %>
+          <% c = 1 %>
+          <% @corrections.each do |correction|%>
+            <tr>
+              <td><%= c %></td>
+              <% ctor = correction.corrector %>
+              <% cted = correction.corrected %>
+              <td><%= "#{ctor.email} - #{ctor.alumni_number}"%></td>
+              <td><%= "#{ctor.name} #{ctor.last_name}"%></td>
+              <td><%= "#{cted.email} - #{cted.alumni_number}"%></td>
+              <td><%= "#{cted.name} #{cted.last_name}"%></td>
+              <td><%= correction.score%></td>
+              <td><%=link_to 'Editar', edit_correction_path(correction)%></td>
+            </tr>
+            <% c += 1 %>
+          <%end%>
+        <%end%>
+      </tbody>
+    </table>
+  </div>
+</div>

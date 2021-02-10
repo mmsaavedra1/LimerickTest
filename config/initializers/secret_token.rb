@@ -1,0 +1,1 @@
+OyCEFileManager::Application.config.secret_key_base = "9d76ca06d121e8f355587e0baa5d477b960fff29b89aa2e3e791084704c85a782c62150ed6bb28220c891563acb1d99001ad3b1ee6b9a7ee52981a5cf8ee42a9"

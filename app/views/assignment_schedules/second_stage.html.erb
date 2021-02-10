@@ -1,0 +1,144 @@
+<%= content_for(:title, "Etapa II") %>
+<div class="alert alert-info alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  Ya no es necesario enviar mail para avisar los datos de autor, lo puedes hacer directamente desde Limerick. Cualquier duda revisa las <%= link_to "preguntas frecuentes (FAQ)", "/faq" %>
+</div>
+<div class="container">
+<h3><b>Descargar ensayos a corregir</b></h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Ensayo a Corregir <i class="fa fa-download fa-lg" aria-hidden="true"></i></th>
+      <th scope="col">Cierre form</th>
+      <th scope="col">Form <i class="fa fa-upload fa-lg" aria-hidden="true"></i></th>
+      <th scope="col">Archivo Subido <i class="fa fa-download fa-lg" aria-hidden="true"></i></th>
+      <th scope="col">Puntaje Asignado</th>
+      <th scope="col">¿Contiene datos autor?</th>
+      <th scope="col">Puntaje Obtenido</th>
+      <th scope="col">Recorrección</th>
+      <th scope="col">Cierre form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%if !@second_stage_schedules.nil? %>
+      <%@second_stage_schedules.each do |i|%>
+        <%@to_correct.each do |j|%>
+          <%if j.assignment_number == i.assignment_number%>
+            <tr>
+              <th scope="row"><%=i.assignment_number%></th>
+              <td>
+                <%= link_to j.aux_name, :controller => "attachments", :action => "download_file", id: j.id, assignment_schedule_id: i.id, remote: true%>
+                <%= link_to attachments_downloadFile_path(id: j.id, assignment_schedule_id: i.id), remote: true do %>
+                  <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+                <%end%>
+              </td>
+              <td>
+                <%=i.end_date.strftime("%a %d/%m %H:%M")%>
+              </td>
+              <td>
+              <%if Time.now < i.end_date%>
+                  <%=form_for :attachment, :html => {:class => "form-horizontal"}, url: attachments_uploadSecondCorrection_path, remote: true do |f|%>
+                    <%= f.file_field :essay, class: "btn btn-sm btn-secondary"%>
+                    <b>Puntaje</b>
+                    <%= select_tag :puntaje, options_for_select([1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, -1]) %>
+                    <div>
+                      <%= label_tag :contains_author_data, "¿Contiene datos de autor?", style: "font-weight: normal; display: inline-block;" %>
+                      <%= hidden_field_tag :contains_author_data, 'false' %>
+                      <%= check_box_tag :contains_author_data %>
+                    </div>
+                    <%= hidden_field_tag :form_stage, value = "second"%>
+                    <%= hidden_field_tag :required_name, value = j.aux_name%>
+                    <%= hidden_field_tag :assignment_schedule_id, value = i.id%>
+                    <%= f.submit :upload, class: "btn btn-sm btn-primary"%>
+                  <%end%>
+              <%else%>
+                Form Cerrado
+              <%end%>
+              </td>
+              <td>
+                <%c = @corrected_by_me.find_by(essay_file_name: j.aux_name)%>
+                <%if !c.nil?%>
+                  <%= link_to j.aux_name, :controller => "attachments", :action => "download_file", id: c.id, assignment_schedule_id: i.id, remote: true%>
+                  <%= link_to attachments_downloadFile_path(id: c.id, assignment_schedule_id: i.id), remote: true do %>
+                    <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+                  <%end%>
+                <%else%>
+                  Aún no has subido tu corrección
+                <%end%>
+              </td>
+              <%if !c.nil? && c.correction%>
+                <td>
+                  <%= c.correction.score%>
+                </td>
+                <td>
+                  <%= c.correction.contains_author_data %>
+                </td>
+              <% else %>
+                <td>
+                </td>
+                <td>
+                </td>
+              <%end%>
+              <td>
+                <% if !c.nil? && c.correction %>
+                  <% correction_as_corrector = @corrections_as_corrector.find_by("assignment_schedules.assignment_id = ? AND corrector_id = ? AND stage = ?", i.assignment_id, c.correction.corrected_id, AssignmentSchedule.stages[:Tercera]) %>
+                  <% if correction_as_corrector && Time.now > correction_as_corrector.assignment_schedule.end_date %>
+                    <%= correction_as_corrector.score %>
+                  <% else %>
+                    N/A
+                  <% end %>
+                <% else %>
+                  N/A
+                <% end %>
+              </td>
+              <% schedule = @fourth_stage_schedules.find_by(assignment_id: i.assignment_id) %>
+              <% if schedule %>
+                <% if correction_as_corrector %>
+                  <% correction_review = CorrectionReview.find_by(assignment_schedule_id: schedule.id, correction_id: correction_as_corrector.id) %>
+                  <% if Time.now < schedule.end_date %>
+                    <% if correction_review  %>
+                      <td>
+                        <%= link_to "Ver solicitud", correction_review_path(correction_review), remote: true, data: {:target => "#review-modal", :toggle => "modal"} %>
+                      </td>
+                    <% else %>
+                      <td>
+                        <%= link_to "Recorregir", new_correction_review_path(correction_id: correction_as_corrector.id), remote: true, data: {:target => "#review-modal", :toggle => "modal"} %>
+                      </td>
+                    <% end %>
+                  <% else %>
+                    <% if correction_review %>
+                      <td>
+                        <%= link_to "Ver solicitud", correction_review_path(correction_review), remote: true, data: {:target => "#review-modal", :toggle => "modal"} %>
+                      </td>
+                    <% else %>
+                      <td>
+                        <%= "Form Cerrado" %>
+                      </td>
+                    <% end %>
+                  <% end %>
+                <% else %>
+                  <td>
+                    <%= "Form Cerrado" %>
+                  </td>
+                <% end %>
+                <td>
+                  <%= schedule.end_date.strftime("%a %d/%m %H:%M")%>
+                </td>
+              <% else %>
+                <td>
+                  N/A
+                </td>
+                <td>
+                </td>
+              <% end %>
+            </tr>
+          <%end%>
+        <%end%>
+      <%end%>
+    <%end%>
+  </tbody>
+</table>
+</div>
+<div class="modal fade" id="review-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+</div>

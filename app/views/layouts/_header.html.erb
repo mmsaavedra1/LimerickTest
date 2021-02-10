@@ -1,0 +1,51 @@
+
+<header class="navbar navbar-fixed-top navbar-inverse">
+  <div class="ribbon show-tooltip" data-toggle="tooltip" data-placement="right" title="Actualmente estamos en beta, si tienes algún feedback escríbenos a help@limerick.cl :)">
+    <div class="box"><span>BETA</span></div>
+  </div>
+  <div class="container">
+      <a class="navbar-brand" id="logo" href="/">
+        Limerick
+      </a>
+      <nav>
+      <ul class="nav navbar-nav navbar-right">
+        <% if current_user %>
+          <% if current_user.has_role? :student %>
+            <li><%= link_to "FAQ", faq_path %></li>
+            <li><%= link_to "Puntajes", corrections_path %></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                Ensayos <b class="caret"></b>
+              </a>
+              <ul class="dropdown-menu">
+                <li><%= link_to "Primera Etapa", '/etapas/1', class: "dropdown-options" %></li>
+                <li><%= link_to "Segunda Etapa", '/etapas/2', class: "dropdown-options" %></li>
+                <li><%= link_to "Tercera Etapa", '/etapas/3', class: "dropdown-options" %></li>
+              </ul>
+            </li>
+          <% elsif current_user.has_role?(:admin) || current_user.has_role?(:sub_admin) %>
+            <% if current_user.has_role?(:admin) %>
+              <li><%= link_to "Menu Formularios",  '/assignment_schedules' %></li>
+              <li><%= link_to "Ensayos",  '/assignments/essays' %></li>
+              <li><%= link_to "Correcciones",  '/assignments/corrections' %></li>
+              <li><%= link_to "Auditorías",  '/audit' %></li>
+            <% end %>
+            <li><%= link_to "Recorrecciones", correction_reviews_admin_assignments_path %></li>
+          <%end%>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              Mi cuenta ( <%= current_user.email %> ) <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+              <li><%= link_to "Cambiar Contraseña", edit_user_registration_path, class: "dropdown-options" %></li>
+              <li class="divider"></li>
+              <li><%= link_to "Cerrar Sesión", destroy_user_session_path, :method => :delete, class: "dropdown-options" %></li>
+            </ul>
+          </li>
+        <% else %>
+          <li><%= link_to "Iniciar Sesión", '#' %></li>
+        <% end %>
+      </ul>
+    </nav>
+  </div>
+</header>

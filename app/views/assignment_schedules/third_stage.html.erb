@@ -1,0 +1,104 @@
+<%= content_for(:title, "Etapa III") %>
+<div class="container">
+<h3><b>Evaluar correctores</b></h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col"># Ensayo</th>
+      <th scope="col">Ensayo Corregido <i class="fa fa-download fa-lg" aria-hidden="true"></i></th>
+      <th scope="col">Cierre Form</th>
+      <th scope="col">Form <i class="fa fa-upload fa-lg" aria-hidden="true"></i></th>
+      <th scope="col">Evaluación a Corrector</th>
+      <th scope="col">Mi puntaje</th>
+      <th scope="col">Recorrección</th>
+      <th scope="col">Cierre form</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%if !@third_stage_schedules.nil? %>
+      <%@third_stage_schedules.each do |j|%>
+        <%@my_essays_corrected.each do |i|%>
+          <%if i.assignment_number == j.assignment_number%>
+            <tr>
+              <th scope="row"><%=i.assignment_number%></th>
+              <td>
+                <%= link_to i.essay_file_name, :controller => "attachments", :action => "download_file", id: i.id, assignment_schedule_id: j.id, remote: true%>
+                <%= link_to attachments_downloadFile_path(id: i.id, assignment_schedule_id: j.id), remote: true do %>
+                  <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+                <%end%>
+              </td>
+              <td>
+                <%=j.end_date.strftime("%a %d/%m %H:%M")%>
+              </td>
+              <td>
+              <%if Time.now < j.end_date%>
+                  <%=form_for :attachment, :html => {:class => "form-horizontal center"}, url: attachments_uploadThirdCorrection_path do |f|%>
+                    <%= f.select(:score, options_for_select([0,1,2,3])) %>
+                    <%= hidden_field_tag :assignment_schedule_id, value = j.id%>
+                    <%= hidden_field_tag :filename, value = i.essay_file_name%>
+                    <%= hidden_field_tag :corrected, value = i.user_id%>
+                    <%= f.submit :submit, class: "btn btn-sm btn-primary"%>
+                  <%end%>
+              <%else%>
+                Form Cerrado
+              <%end%>
+              </td>
+              <td>
+                <%a = @my_corrections_to_correctors.find_by("corrected_id = ? AND assignments.number = ?", i.user.id, i.assignment_number)%>
+                <%unless a.nil?%>
+                  <%= a.score%>
+                <%end%>
+              </td>
+              <td>
+                <%if Time.now > j.end_date%>
+                  <font color="green"><b><%= i.correction.score%></b></font>
+                <%else%>
+                  <font color="red"><b>No disponible aun</b></font>
+                <%end%>
+              </td>
+              <% schedule = @fourth_stage_schedules.find_by(assignment_id: j.assignment_id) %>
+              <% if schedule %>
+                <% correction_review = CorrectionReview.find_by(assignment_schedule_id: schedule.id, correction_id: i.correction.id) %>
+                <% if Time.now < schedule.end_date %>
+                  <% if correction_review %>
+                    <td>
+                      <%= link_to "Ver solicitud", correction_review_path(correction_review), remote: true, data: {:target => "#review-modal", :toggle => "modal"} %>
+                    </td>
+                  <% else %>
+                    <td>
+                      <%= link_to "Recorregir", new_correction_review_path(correction_id: i.correction.id), remote: true, data: {:target => "#review-modal", :toggle => "modal"} %>
+                    </td>
+                  <% end %>
+                <% else %>
+                  <% if correction_review %>
+                    <td>
+                      <%= link_to "Ver solicitud", correction_review_path(correction_review), remote: true, data: {:target => "#review-modal", :toggle => "modal"} %>
+                    </td>
+                  <% else %>
+                    <td>
+                      <%= "Form Cerrado" %>
+                    </td>
+                  <% end %>
+                <% end %>
+                <td>
+                  <%= schedule.end_date.strftime("%a %d/%m %H:%M")%>
+                </td>
+              <% else %>
+                <td>
+                  N/A
+                </td>
+                <td>
+                </td>
+              <% end %>
+            </tr>
+          <%end%>
+        <%end%>
+      <%end%>
+    <%end%>
+  </tbody>
+</table>
+</div>
+<div class="modal fade" id="review-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+</div>
+
+<br>

@@ -1,0 +1,21 @@
+<div class="modal-dialog" role="document">
+  <div class="modal-content">
+    <div class="modal-header">
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      <h4 class="modal-title" id="myModalLabel"><%= "Ensayo #{@fourth_stage_schedule.assignment.number}" %></h4>
+    </div>
+    <%= form_with model: @correction_review do |f|%>
+      <%= f.hidden_field :assignment_schedule_id, value: @fourth_stage_schedule.id %>
+      <%= f.hidden_field :correction_id, value: @correction.id %>
+      <div class="modal-body">
+        <div class="form-group">
+          <%= f.text_area :student_comment, class: "form-control", placeholder: "Estoy enviando este ensayo a recorregir porque...", rows: "3"  %>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <%= f.submit :Enviar, class: "btn btn-primary"%>
+      </div>
+    </div>
+  <%end%>
+</div>

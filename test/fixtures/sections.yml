@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  clase: one
+  term: one
+  number: 1
+
+two:
+  clase: two
+  term: two
+  number: 1

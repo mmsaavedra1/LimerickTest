@@ -1,0 +1,35 @@
+<%= content_for(:title, "Auditorías") %>
+<h1>Auditorías</h1>
+
+<h3>Auditoría General</h3>
+<%= form_tag("/audit.zip", method: "get") do %>
+  <div class="field">
+    <%= label_tag(:percentage, "Seleccione un porcentaje de ensayos a auditar:") %>
+    <%= select_tag(:percentage, options_for_select((10..100).step(10))) %>
+
+  </div>
+  <div class="field">
+    <%= label_tag(:essay_number, "Seleccione el numero de ensayo:") %>
+    <%= select_tag(:essay_number, options_for_select(@assignments.collect{ |a| a.number })) %>
+
+  </div>
+  <div class="actions">
+  <%= submit_tag("Descargar", class: "btn btn-primary") %>
+  </div>
+<% end %>
+<br>
+<hr>
+<h3>Ensayos no corregidos</h3>
+<%= form_tag("/audit/not_corrected.zip", method: "get") do %>
+  <div class="field">
+    <%= label_tag(:essay_number, "Seleccione el numero de ensayo:") %>
+    <%= select_tag(:essay_number, options_for_select(@assignments.collect{ |a| a.number })) %>
+
+  </div>
+  <div class="actions">
+  <%= submit_tag("Descargar", class: "btn btn-primary") %>
+  </div>
+<% end %>
+
+<h3>Puntajes finales</h3>
+<%= link_to "Descargar", audit_final_scores_path(format: :xlsx), class: "btn btn-primary" %>

@@ -1,0 +1,22 @@
+<%= form_with(model: correction, local: true) do |form| %>
+  <% if correction.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(correction.errors.count, "error") %> prohibited this correction from being saved:</h2>
+
+      <ul>
+      <% correction.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :score %>
+    <%= form.number_field :score, id: :correction_score %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

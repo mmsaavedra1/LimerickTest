@@ -1,0 +1,28 @@
+<h1>Editing Correction</h1>
+<p>
+  <% ctor = @correction.corrector %>
+  <% cted = @correction.corrected %>
+  <%= "#{ctor.email}  - #{ctor.alumni_number} corrige a #{cted.email} - #{cted.alumni_number}" %>
+  </p>
+<h2>Recorrección</h2>
+<% if @fourth_stage_schedule %>
+  <% correction_review = CorrectionReview.find_by(assignment_schedule_id: @fourth_stage_schedule.id, correction_id: @correction.id) %>
+  <% if correction_review  %>
+    <td>
+      <%= link_to "Ver solicitud", correction_review_path(correction_review), remote: true, data: {:target => "#review-modal", :toggle => "modal"} %>
+    </td>
+  <% else %>
+    <td>
+      <%= link_to "Recorregir", new_correction_review_path(correction_id: @correction.id), remote: true, data: {:target => "#review-modal", :toggle => "modal"} %>
+    </td>
+  <% end %>
+<% end %>
+
+<h2>Puntaje</h2>
+<%= render 'form', correction: @correction %>
+
+<%= link_to 'Show', @correction %> |
+<%= link_to 'Back', corrections_path %>
+
+<div class="modal fade" id="review-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+</div>

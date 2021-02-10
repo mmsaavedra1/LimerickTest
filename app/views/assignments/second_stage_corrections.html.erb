@@ -1,0 +1,49 @@
+<%= content_for(:title, "Corrección Ensayo #{params[:number]}") %>
+<div class="container">
+  <h3><b>Ensayo #<%=params[:number]%></b></h3>
+  <div class="col-md">
+    <%= link_to "Descargar Zip", {:controller => "assignments", :action => "show_corrections", number: params[:number], format: :zip}, class: "btn btn-primary" %>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Alumno Corrector</th>
+        <th scope="col">Nombre Corrector</th>
+        <th scope="col">Alumno Corregido</th>
+        <th scope="col">Nombre Corregido</th>
+        <th scope="col">Puntaje</th>
+        <th scope="col">Ensayo Corregido</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%unless @corrections.nil? %>
+        <% c = 1 %>
+        <% @corrections.each do |correction|%>
+          <tr>
+            <% ctor = correction.corrector %>
+            <% cted = correction.corrected %>
+            <td><%= c %></td>
+            <td><%= "#{ctor.email}  - #{ctor.alumni_number}"%></td>
+            <td><%= "#{ctor.name} #{ctor.last_name}"%></td>
+            <td><%= "#{cted.email} - #{cted.alumni_number}"%></td>
+            <td><%= "#{cted.name} #{cted.last_name}"%></td>
+            <td><%= correction.score%></td>
+            <% unless correction.attachment_id.nil? %>
+              <td>
+                <% i = correction.attachment %>
+                <%= link_to i.essay_file_name, :controller => "attachments", :action => "download_file", id: i.id, remote: true%>
+                <%= link_to attachments_downloadFile_path(id: i.id), remote: true do %>
+                  <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+                <%end%>
+              </td>
+            <% end %>
+            <td><%=link_to 'Editar', edit_correction_path(correction)%></td>
+          </tr>
+          <% c += 1 %>
+        <% end %>
+      <%end%>
+    </tbody>
+  </table>
+</div>

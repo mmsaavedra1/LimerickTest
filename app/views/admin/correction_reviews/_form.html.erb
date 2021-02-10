@@ -1,0 +1,28 @@
+<%= form_with(model: correction_review, local: true) do |f| %>
+  <% if correction_review.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(correction_review.errors.count, "error") %> prohibited this correction_review from being saved:</h2>
+
+      <ul>
+      <% correction_review.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <h4>Solicitud</h4>
+  <p><%= "#{@correction_review.correction.score} puntos" %></p>
+  <p>
+    <%= @correction_review.student_comment %>
+  </p>
+  <h4>Respuesta</h4>
+  <div class="form-group">
+    <%= f.label :puntaje_reajuste %>
+    <%= f.number_field :score_delta, class: "form-control"  %>
+  </div>
+  <div class="form-group">
+    <%= f.label :Razon %>
+    <%= f.text_area :reviewer_comment, class: "form-control", placeholder: "...", rows: "3"  %>
+  </div>
+  <%= f.submit :Guardar, class: "btn btn-primary"%>
+<% end %>

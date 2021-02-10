@@ -1,0 +1,20 @@
+[
+    {
+        "alumni_number": "12345678",
+        "email": "test@uc.cl",
+        "name": "Test",
+        "last_name": "UC"
+    },
+    {
+        "alumni_number": "12345679",
+        "email": "test2@uc.cl",
+        "name": "Test3",
+        "last_name": "UC"
+    },
+    {
+        "alumni_number": "12345670",
+        "email": "test3@uc.cl",
+        "name": "Test3",
+        "last_name": "UC"
+    }
+]

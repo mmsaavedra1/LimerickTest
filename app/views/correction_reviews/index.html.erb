@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Correction Reviews</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Reviewer</th>
+      <th>Correction</th>
+      <th>Assignment schedule</th>
+      <th>Score delta</th>
+      <th>Student comment</th>
+      <th>Reviewer comment</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @correction_reviews.each do |correction_review| %>
+      <tr>
+        <td><%= correction_review.reviewer_id %></td>
+        <td><%= correction_review.correction %></td>
+        <td><%= correction_review.assignment_schedule %></td>
+        <td><%= correction_review.score_delta %></td>
+        <td><%= correction_review.student_comment %></td>
+        <td><%= correction_review.reviewer_comment %></td>
+        <td><%= link_to 'Show', correction_review %></td>
+        <td><%= link_to 'Edit', edit_correction_review_path(correction_review) %></td>
+        <td><%= link_to 'Destroy', correction_review, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Correction Review', new_correction_review_path %>

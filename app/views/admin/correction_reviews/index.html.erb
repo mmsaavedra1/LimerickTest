@@ -1,0 +1,56 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Correction Reviews</h1>
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Ayudante</th>
+      <th>Alumno corrector</th>
+      <th>Alumno corregido</th>
+      <th>Etapa</th>
+      <th>Ensayo</th>
+      <th>Puntaje</th>
+      <th>Reajuste</th>
+      <th>Total</th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @correction_reviews.each do |correction_review| %>
+      <tr>
+        <td><%= correction_review.reviewer.email %></td>
+        <td><%= "#{correction_review.correction.corrector.email} - #{correction_review.correction.corrector.alumni_number}" %></td>
+        <td><%= "#{correction_review.correction.corrected.email} - #{correction_review.correction.corrected.alumni_number}" %></td>
+        <% stage = correction_review.correction.stage %>
+        <% cell_color = stage == "Segunda" ? "green" : "rgb(26, 115, 232)" %>
+        <td style="color: <%= cell_color %>;"><%= stage %></td>
+        <td>
+        <% if stage == "Segunda" %>
+          <% corrected_essay = correction_review.correction.attachment %>
+        <% elsif stage == "Tercera" %>
+          <% corrected_essay = correction_review.correction.reversed_correction.attachment %>
+        <% end %>
+        <% if corrected_essay %>
+          <%= link_to attachments_downloadFile_path(id: corrected_essay.id, assignment_schedule_id: correction_review.correction.assignment_schedule_id), remote: true, style: "color: #{cell_color};" do %>
+            <%= corrected_essay.essay_file_name %>
+          <% end %>
+        <% end %>
+        </td>
+        <% original_score = correction_review.correction.score %>
+        <% delta_score = correction_review.score_delta %>
+        <% final_score = original_score.nil? ? 0 : original_score %>
+        <% final_score += delta_score.nil? ? 0 : delta_score %>
+        <td><%= original_score %></td>
+        <td><%= delta_score %></td>
+        <td><%= final_score %></td>
+        <td><%= link_to 'Ver', edit_admin_assignment_correction_review_path(id: correction_review.id), remote: true %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+<br>
+
+<div class="modal fade" id="review-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+</div>

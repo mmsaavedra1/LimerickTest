@@ -1,0 +1,38 @@
+<%= content_for(:title, "Ensayo #{params[:number]}") %>
+<div class="container">
+<h3><b>Ensayo #<%=params[:number]%></b></h3>
+  <div class="col-md">
+    <%= link_to "Descargar Zip", {:controller => "assignments", :action => "show_essays", number: params[:number], format: :zip}, class: "btn btn-primary" %>
+  </div>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Nombre Alumno</th>
+        <th scope="col">Usuario</th>
+        <th scope="col">Numero de alumno</th>
+        <th scope="col">Ensayo</th>
+      </tr>
+    </thead>
+    <tbody>
+      <%unless @attachments.nil? %>
+        <% c = 1 %>
+        <% @attachments.each do |i|%>
+          <tr>
+            <td><%= c %></td>
+            <td><%= "#{i.user.name} #{i.user.last_name}" %></td>
+            <th scope="row"><%=i.user.email%></th>
+            <td><%= "#{i.user.alumni_number}" %></td>
+            <td>
+              <%= link_to i.essay_file_name, :controller => "attachments", :action => "download_file", id: i.id, remote: true%>
+              <%= link_to attachments_downloadFile_path(id: i.id), remote: true do %>
+                <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+              <%end%>
+            </td>
+          </tr>
+          <% c += 1 %>
+        <%end%>
+      <%end%>
+    </tbody>
+  </table>
+</div>

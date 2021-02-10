@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="col-md-12">
+    <h4 class="modal-title" id="myModalLabel"><%= "Ensayo #{@correction_review.assignment_schedule.assignment_number}" %></h4>
+      <h4>Solicitud</h4>
+      <p>
+        <%= @correction_review.student_comment %>
+      </p>
+      <h4>Respuesta</h4>
+      <% if @correction_review.reviewer_comment.nil? %>
+        <p>
+          Tu solicitud aún no ha sido revisada.
+        </p>
+      <% else %>
+        <p>
+          <%= @correction_review.reviewer_comment %>
+        </p>
+        <p>
+          <%= "Tu puntaje varió en #{@correction_review.score_delta} puntos." %>
+        </p>
+      <% end %>
+  </div>
+</div>

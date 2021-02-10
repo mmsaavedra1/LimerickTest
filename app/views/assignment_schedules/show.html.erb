@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Assignment number:</strong>
+  <%= @assignment_schedule.assignment_number %>
+</p>
+
+<p>
+  <strong>Start date:</strong>
+  <%= @assignment_schedule.start_date %>
+</p>
+
+<p>
+  <strong>End date:</strong>
+  <%= @assignment_schedule.end_date %>
+</p>
+
+<%= link_to 'Edit', edit_assignment_schedule_path(@assignment_schedule) %> |
+<%= link_to 'Back', assignment_schedules_path %>

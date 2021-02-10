@@ -1,0 +1,5 @@
+<% if notice %>
+  $('#notice').append("<div class='alert alert-success alert-dismissible'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><%= notice %></div>");
+<% elsif alert %>
+  $('#notice').append("<div class='alert alert-danger alert-dismissible'><a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a><%= alert %></div>");
+<% end %>

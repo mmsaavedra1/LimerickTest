@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  assignment_number: 1
+  start_date: 2017-12-08 19:00:17
+  end_date: 2017-12-08 19:00:17
+
+two:
+  assignment_number: 1
+  start_date: 2017-12-08 19:00:17
+  end_date: 2017-12-08 19:00:17

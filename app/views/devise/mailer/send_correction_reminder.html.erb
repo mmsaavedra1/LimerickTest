@@ -1,0 +1,23 @@
+<p>
+  Hola <%= @user.name %>,<br>
+</p>
+<p>
+  Este es un mensaje automático de Limerick para recordarte que debes subir tus correcciones para no quedar fuera del proceso y obtener 0 puntos.
+  Este mensaje se entrega a los alumnos que han subido 1 o menos correcciones.<br>
+</p>
+<p>
+  Envía tus correcciones ingresando a:
+  <% if @stage == "Segunda" %>
+    http://www.limerick.cl/etapas/2.<br>
+  <% elsif @stage == "Tercera" %>
+    http://www.limerick.cl/etapas/3.<br>
+  <% end %>
+</p>
+<p>
+  Si ya subiste tus correcciones puedes ignorar este mensaje.
+  Cualquier duda o error por favor escribir a: help@limerick.cl<br>
+</p>
+<p>
+  Saludos,<br>
+  Bastián
+</p>

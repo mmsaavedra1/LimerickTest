@@ -1,0 +1,47 @@
+<%= form_with(model: correction_review, local: true) do |form| %>
+  <% if correction_review.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(correction_review.errors.count, "error") %> prohibited this correction_review from being saved:</h2>
+
+      <ul>
+      <% correction_review.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :reviewer_id_id %>
+    <%= form.text_field :reviewer_id_id, id: :correction_review_reviewer_id_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :correction_id %>
+    <%= form.text_field :correction_id, id: :correction_review_correction_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :assignment_schedule_id %>
+    <%= form.text_field :assignment_schedule_id, id: :correction_review_assignment_schedule_id %>
+  </div>
+
+  <div class="field">
+    <%= form.label :score_delta %>
+    <%= form.number_field :score_delta, id: :correction_review_score_delta %>
+  </div>
+
+  <div class="field">
+    <%= form.label :student_comment %>
+    <%= form.text_area :student_comment, id: :correction_review_student_comment %>
+  </div>
+
+  <div class="field">
+    <%= form.label :reviewer_comment %>
+    <%= form.text_area :reviewer_comment, id: :correction_review_reviewer_comment %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

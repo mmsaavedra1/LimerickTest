@@ -1,0 +1,58 @@
+<%= content_for(:title, "Etapa I") %>
+<div class="alert alert-info alert-dismissible">
+  <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  <b>Recuerda:
+  <ul>
+    <li>Eliminar los datos de autor.</li>
+    <li>Verificar que hayas subido correctamente tu archivo.</li>
+    <li>No subir un archivo en blanco, ya que es falta a la ética.</li>
+  </ul>
+  </b>
+</div>
+<div class="container">
+  <h3><b>Subir ensayos</b></h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Ensayo #</th>
+        <th scope="col">Fecha término formulario</th>
+        <th scope="col">Archivo</th>
+        <th scope="col">Ultimo Archivo Subido <i class="fa fa-download fa-lg" aria-hidden="true"></i></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%if !@first_stage_schedules.nil? %>
+        <% @first_stage_schedules.each do |i|%>
+          <tr>
+            <th scope="row"><%=i.assignment_number%></th>
+            <td><%=i.end_date.asctime%></td>
+            <td>
+              <%if Time.now < i.end_date%>
+                  <%=form_for :attachment, html: { class: 'form-horizontal' }, url: attachments_uploadFile_path do |f|%>
+                    <%= f.file_field :essay%>
+                    <%= hidden_field_tag :assignment_schedule_id, value = i.id%>
+                    <%= f.submit "Cargar archivo", class: "btn btn-sm btn-primary", remote: true%>
+                  <%end%>
+              <%else%>
+                Formulario Cerrado
+              <%end%>
+            </td>
+            <td>
+              <% unless @attachments.nil? %>
+                <% j = @attachments.find_by(assignment_schedule_id: i.id) %>
+                <%if !j.nil? %>
+                  <%= link_to j.essay_file_name, :controller => "attachments", :action => "download_file", id: j.id, remote: true%>
+                  <%= link_to attachments_downloadFile_path(id: j.id), remote: true do %>
+                    <i class="fa fa-download fa-lg" aria-hidden="true"></i>
+                  <%end%>
+                <% else %>
+                  -
+                <%end%>
+              <%end%>
+            </td>
+          </tr>
+        <%end%>
+      <%end%>
+    </tbody>
+  </table>
+</div>

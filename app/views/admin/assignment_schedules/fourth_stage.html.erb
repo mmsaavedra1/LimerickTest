@@ -1,0 +1,32 @@
+<%= content_for(:title, "Ensayos") %>
+<div class="container">
+<h3><b>Recorrecciones</b></h3>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Ensayo #</th>
+      <th scope="col">Recorrecciones Entregadas</th>
+      <% if current_user.has_role? :admin %>
+        <th scope="col">Recorrectores asignados</th>
+        <th scope="col">Asignación</th>
+      <% end %>
+      <th scope="col">Link</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%unless @fourth_stage_schedules.nil?%>
+      <% @fourth_stage_schedules.each do |i|%>
+        <tr>
+          <th scope="row"><%=i.assignment_number%></th>
+          <td><%=i.correction_reviews.count%></td>
+          <% if current_user.has_role? :admin %>
+            <td><%= "" %></td>
+            <td><%= link_to 'Asignar Recorrectores', admin_assignment_correction_reviews_path(i.assignment_number) %></td>
+          <% end %>
+          <td><%= link_to 'Ver Recorrecciones', admin_assignment_correction_reviews_path(i.assignment_number) %></td>
+        </tr>
+      <%end%>
+    <%end%>
+  </tbody>
+</table>
+</div>

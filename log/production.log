@@ -1,0 +1,172 @@
+D, [2021-01-24T17:21:55.512740 #4044] DEBUG -- :   [1m[35m (19.0ms)[0m  [1m[35mCREATE TABLE "schema_migrations" ("version" character varying NOT NULL PRIMARY KEY)[0m
+D, [2021-01-24T17:21:55.525913 #4044] DEBUG -- :   [1m[35m (3.4ms)[0m  [1m[35mCREATE TABLE "ar_internal_metadata" ("key" character varying NOT NULL PRIMARY KEY, "value" character varying, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+D, [2021-01-24T17:21:55.527759 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_try_advisory_lock(7211057457262037610)[0m
+D, [2021-01-24T17:21:55.563180 #4044] DEBUG -- :   [1m[35m (0.7ms)[0m  [1m[34mSELECT "schema_migrations"."version" FROM "schema_migrations" ORDER BY "schema_migrations"."version" ASC[0m
+I, [2021-01-24T17:21:55.565293 #4044]  INFO -- : Migrating to DeviseCreateUsers (20171102233442)
+D, [2021-01-24T17:21:55.568452 #4044] DEBUG -- :   [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.578881 #4044] DEBUG -- :   [1m[35m (6.9ms)[0m  [1m[35mCREATE TABLE "users" ("id" bigserial primary key, "email" character varying DEFAULT '' NOT NULL, "encrypted_password" character varying DEFAULT '' NOT NULL, "alumni_number" character varying DEFAULT '' NOT NULL, "name" character varying DEFAULT '', "last_name" character varying DEFAULT '', "reset_password_token" character varying, "reset_password_sent_at" timestamp, "remember_created_at" timestamp, "sign_in_count" integer DEFAULT 0 NOT NULL, "current_sign_in_at" timestamp, "last_sign_in_at" timestamp, "current_sign_in_ip" inet, "last_sign_in_ip" inet, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+D, [2021-01-24T17:21:55.584941 #4044] DEBUG -- :   [1m[35m (1.2ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_email" ON "users"  ("email")[0m
+D, [2021-01-24T17:21:55.588717 #4044] DEBUG -- :   [1m[35m (1.2ms)[0m  [1m[35mCREATE UNIQUE INDEX  "index_users_on_reset_password_token" ON "users"  ("reset_password_token")[0m
+D, [2021-01-24T17:21:55.592325 #4044] DEBUG -- :   [1m[35mSQL (0.5ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171102233442"]]
+D, [2021-01-24T17:21:55.593159 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.593262 #4044]  INFO -- : Migrating to CreateAssignments (20171109041614)
+D, [2021-01-24T17:21:55.594525 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.598412 #4044] DEBUG -- :   [1m[35m (3.2ms)[0m  [1m[35mCREATE TABLE "assignments" ("id" bigserial primary key, "number" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+D, [2021-01-24T17:21:55.599807 #4044] DEBUG -- :   [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171109041614"]]
+D, [2021-01-24T17:21:55.600592 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.600699 #4044]  INFO -- : Migrating to CreateAssignmentSchedules (20171109220017)
+D, [2021-01-24T17:21:55.602192 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.614457 #4044] DEBUG -- :   [1m[35m (8.8ms)[0m  [1m[35mCREATE TABLE "assignment_schedules" ("id" bigserial primary key, "assignment_id" bigint, "stage" integer, "start_date" timestamp DEFAULT '2021-01-24 20:21:55.603817', "end_date" timestamp DEFAULT '2021-01-26 20:21:55.603948', "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_cadff7db98"
+FOREIGN KEY ("assignment_id")
+  REFERENCES "assignments" ("id")
+)[0m
+D, [2021-01-24T17:21:55.617792 #4044] DEBUG -- :   [1m[35m (1.3ms)[0m  [1m[35mCREATE  INDEX  "index_assignment_schedules_on_assignment_id" ON "assignment_schedules"  ("assignment_id")[0m
+D, [2021-01-24T17:21:55.620178 #4044] DEBUG -- :   [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171109220017"]]
+D, [2021-01-24T17:21:55.621128 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.621337 #4044]  INFO -- : Migrating to CreateCourses (20171110153929)
+D, [2021-01-24T17:21:55.622653 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.627463 #4044] DEBUG -- :   [1m[35m (4.1ms)[0m  [1m[35mCREATE TABLE "courses" ("id" bigserial primary key, "course_id" character varying, "name" character varying, "credits" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+D, [2021-01-24T17:21:55.629093 #4044] DEBUG -- :   [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171110153929"]]
+D, [2021-01-24T17:21:55.630055 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.630260 #4044]  INFO -- : Migrating to CreateTerms (20171110154010)
+D, [2021-01-24T17:21:55.632092 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.636575 #4044] DEBUG -- :   [1m[35m (3.5ms)[0m  [1m[35mCREATE TABLE "terms" ("id" bigserial primary key, "year" integer, "number" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+D, [2021-01-24T17:21:55.637729 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171110154010"]]
+D, [2021-01-24T17:21:55.638285 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.638376 #4044]  INFO -- : Migrating to CreateClases (20171110154346)
+D, [2021-01-24T17:21:55.639368 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.644437 #4044] DEBUG -- :   [1m[35m (4.2ms)[0m  [1m[35mCREATE TABLE "clases" ("id" bigserial primary key, "professor" character varying, "course_id" bigint, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_af143b18e8"
+FOREIGN KEY ("course_id")
+  REFERENCES "courses" ("id")
+)[0m
+D, [2021-01-24T17:21:55.647806 #4044] DEBUG -- :   [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_clases_on_course_id" ON "clases"  ("course_id")[0m
+D, [2021-01-24T17:21:55.648933 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171110154346"]]
+D, [2021-01-24T17:21:55.649706 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.649794 #4044]  INFO -- : Migrating to CreateSections (20171110154435)
+D, [2021-01-24T17:21:55.650766 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.655421 #4044] DEBUG -- :   [1m[35m (3.8ms)[0m  [1m[35mCREATE TABLE "sections" ("id" bigserial primary key, "clase_id" bigint, "term_id" bigint, "number" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_890f85b4e3"
+FOREIGN KEY ("clase_id")
+  REFERENCES "clases" ("id")
+, CONSTRAINT "fk_rails_ae061b0a82"
+FOREIGN KEY ("term_id")
+  REFERENCES "terms" ("id")
+)[0m
+D, [2021-01-24T17:21:55.658164 #4044] DEBUG -- :   [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_sections_on_clase_id" ON "sections"  ("clase_id")[0m
+D, [2021-01-24T17:21:55.661185 #4044] DEBUG -- :   [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "index_sections_on_term_id" ON "sections"  ("term_id")[0m
+D, [2021-01-24T17:21:55.662466 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171110154435"]]
+D, [2021-01-24T17:21:55.663324 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.663412 #4044]  INFO -- : Migrating to CreateAttachments (20171110163551)
+D, [2021-01-24T17:21:55.664592 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.670485 #4044] DEBUG -- :   [1m[35m (4.0ms)[0m  [1m[35mCREATE TABLE "attachments" ("id" bigserial primary key, "user_id" bigint, "assignment_schedule_id" bigint, "essay_file_name" character varying, "essay_content_type" character varying, "essay_file_size" integer, "essay_updated_at" timestamp, "aux_name" character varying, "correction" boolean DEFAULT 'f', "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_5650a5e7db"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_d0215ecf34"
+FOREIGN KEY ("assignment_schedule_id")
+  REFERENCES "assignment_schedules" ("id")
+)[0m
+D, [2021-01-24T17:21:55.672980 #4044] DEBUG -- :   [1m[35m (1.0ms)[0m  [1m[35mCREATE  INDEX  "index_attachments_on_user_id" ON "attachments"  ("user_id")[0m
+D, [2021-01-24T17:21:55.675456 #4044] DEBUG -- :   [1m[35m (1.0ms)[0m  [1m[35mCREATE  INDEX  "index_attachments_on_assignment_schedule_id" ON "attachments"  ("assignment_schedule_id")[0m
+D, [2021-01-24T17:21:55.677082 #4044] DEBUG -- :   [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171110163551"]]
+D, [2021-01-24T17:21:55.678010 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.678170 #4044]  INFO -- : Migrating to CreateCorrections (20171110163833)
+D, [2021-01-24T17:21:55.680068 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.686718 #4044] DEBUG -- :   [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "corrections" ("id" bigserial primary key, "attachment_id" bigint, "assignment_schedule_id" bigint, "corrector_id" integer, "corrected_id" integer, "score" integer DEFAULT 0, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_3000c428b8"
+FOREIGN KEY ("attachment_id")
+  REFERENCES "attachments" ("id")
+, CONSTRAINT "fk_rails_a2560ece85"
+FOREIGN KEY ("assignment_schedule_id")
+  REFERENCES "assignment_schedules" ("id")
+)[0m
+D, [2021-01-24T17:21:55.690309 #4044] DEBUG -- :   [1m[35m (1.3ms)[0m  [1m[35mCREATE  INDEX  "index_corrections_on_attachment_id" ON "corrections"  ("attachment_id")[0m
+D, [2021-01-24T17:21:55.692945 #4044] DEBUG -- :   [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_corrections_on_assignment_schedule_id" ON "corrections"  ("assignment_schedule_id")[0m
+D, [2021-01-24T17:21:55.694407 #4044] DEBUG -- :   [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171110163833"]]
+D, [2021-01-24T17:21:55.695180 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.695327 #4044]  INFO -- : Migrating to RolifyCreateRoles (20171210032727)
+D, [2021-01-24T17:21:55.699206 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.705530 #4044] DEBUG -- :   [1m[35m (4.7ms)[0m  [1m[35mCREATE TABLE "roles" ("id" serial NOT NULL PRIMARY KEY, "name" character varying, "resource_type" character varying, "resource_id" integer, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL)[0m
+D, [2021-01-24T17:21:55.708677 #4044] DEBUG -- :   [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_roles_on_resource_type_and_resource_id" ON "roles"  ("resource_type", "resource_id")[0m
+D, [2021-01-24T17:21:55.710132 #4044] DEBUG -- :   [1m[35m (0.7ms)[0m  [1m[35mCREATE TABLE "users_roles" ("user_id" integer, "role_id" integer)[0m
+D, [2021-01-24T17:21:55.713142 #4044] DEBUG -- :   [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_users_roles_on_user_id" ON "users_roles"  ("user_id")[0m
+D, [2021-01-24T17:21:55.717430 #4044] DEBUG -- :   [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "index_users_roles_on_role_id" ON "users_roles"  ("role_id")[0m
+D, [2021-01-24T17:21:55.722951 #4044] DEBUG -- :   [1m[35m (1.7ms)[0m  [1m[35mCREATE  INDEX  "index_roles_on_name" ON "roles"  ("name")[0m
+D, [2021-01-24T17:21:55.726767 #4044] DEBUG -- :   [1m[35m (1.2ms)[0m  [1m[35mCREATE  INDEX  "index_roles_on_name_and_resource_type_and_resource_id" ON "roles"  ("name", "resource_type", "resource_id")[0m
+D, [2021-01-24T17:21:55.730210 #4044] DEBUG -- :   [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_users_roles_on_user_id_and_role_id" ON "users_roles"  ("user_id", "role_id")[0m
+D, [2021-01-24T17:21:55.731474 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20171210032727"]]
+D, [2021-01-24T17:21:55.732256 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.732356 #4044]  INFO -- : Migrating to ChangeScoreDefaultOnCorrection (20180315054428)
+D, [2021-01-24T17:21:55.733777 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.738190 #4044] DEBUG -- :   [1m[35m (1.8ms)[0m  [1m[35mALTER TABLE "corrections" ALTER COLUMN "score" DROP DEFAULT[0m
+D, [2021-01-24T17:21:55.739582 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20180315054428"]]
+D, [2021-01-24T17:21:55.740234 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.740376 #4044]  INFO -- : Migrating to CreateCorrectionReviews (20190223204057)
+D, [2021-01-24T17:21:55.741746 #4044] DEBUG -- :   [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.748082 #4044] DEBUG -- :   [1m[35m (5.3ms)[0m  [1m[35mCREATE TABLE "correction_reviews" ("id" bigserial primary key, "reviewer_id" bigint, "correction_id" bigint, "assignment_schedule_id" bigint, "score_delta" integer, "student_comment" text, "reviewer_comment" text, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_3a1e900213"
+FOREIGN KEY ("reviewer_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_fd8adf4ae6"
+FOREIGN KEY ("correction_id")
+  REFERENCES "corrections" ("id")
+, CONSTRAINT "fk_rails_48100ea921"
+FOREIGN KEY ("assignment_schedule_id")
+  REFERENCES "assignment_schedules" ("id")
+)[0m
+D, [2021-01-24T17:21:55.750941 #4044] DEBUG -- :   [1m[35m (1.1ms)[0m  [1m[35mCREATE  INDEX  "index_correction_reviews_on_reviewer_id" ON "correction_reviews"  ("reviewer_id")[0m
+D, [2021-01-24T17:21:55.753457 #4044] DEBUG -- :   [1m[35m (1.0ms)[0m  [1m[35mCREATE  INDEX  "index_correction_reviews_on_correction_id" ON "correction_reviews"  ("correction_id")[0m
+D, [2021-01-24T17:21:55.756915 #4044] DEBUG -- :   [1m[35m (1.3ms)[0m  [1m[35mCREATE  INDEX  "index_correction_reviews_on_assignment_schedule_id" ON "correction_reviews"  ("assignment_schedule_id")[0m
+D, [2021-01-24T17:21:55.758678 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20190223204057"]]
+D, [2021-01-24T17:21:55.759476 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.759578 #4044]  INFO -- : Migrating to CreateAssignmentUsers (20190224122350)
+D, [2021-01-24T17:21:55.761103 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.768719 #4044] DEBUG -- :   [1m[35m (5.9ms)[0m  [1m[35mCREATE TABLE "assignment_users" ("id" bigserial primary key, "user_id" bigint, "assignment_id" bigint, "status" integer DEFAULT 0, "created_at" timestamp NOT NULL, "updated_at" timestamp NOT NULL, CONSTRAINT "fk_rails_4761727175"
+FOREIGN KEY ("user_id")
+  REFERENCES "users" ("id")
+, CONSTRAINT "fk_rails_70183eba58"
+FOREIGN KEY ("assignment_id")
+  REFERENCES "assignments" ("id")
+)[0m
+D, [2021-01-24T17:21:55.773016 #4044] DEBUG -- :   [1m[35m (1.5ms)[0m  [1m[35mCREATE  INDEX  "index_assignment_users_on_user_id" ON "assignment_users"  ("user_id")[0m
+D, [2021-01-24T17:21:55.777790 #4044] DEBUG -- :   [1m[35m (1.6ms)[0m  [1m[35mCREATE  INDEX  "index_assignment_users_on_assignment_id" ON "assignment_users"  ("assignment_id")[0m
+D, [2021-01-24T17:21:55.779630 #4044] DEBUG -- :   [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20190224122350"]]
+D, [2021-01-24T17:21:55.780679 #4044] DEBUG -- :   [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.780817 #4044]  INFO -- : Migrating to AddNotificationColumnsToAssignmentSchedule (20190319182856)
+D, [2021-01-24T17:21:55.782080 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.783054 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mALTER TABLE "assignment_schedules" ADD "opening_notification_sent_at" timestamp[0m
+D, [2021-01-24T17:21:55.783790 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mALTER TABLE "assignment_schedules" ADD "closing_notification_sent_at" timestamp[0m
+D, [2021-01-24T17:21:55.785219 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20190319182856"]]
+D, [2021-01-24T17:21:55.785861 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.785975 #4044]  INFO -- : Migrating to AddAverageScoreToAssignment (20190603040638)
+D, [2021-01-24T17:21:55.788533 #4044] DEBUG -- :   [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.789443 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "assignments" ADD "average_score" float[0m
+D, [2021-01-24T17:21:55.790584 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20190603040638"]]
+D, [2021-01-24T17:21:55.791428 #4044] DEBUG -- :   [1m[35m (0.6ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.791507 #4044]  INFO -- : Migrating to AddPasswordSentToUser (20200315005916)
+D, [2021-01-24T17:21:55.792584 #4044] DEBUG -- :   [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.793836 #4044] DEBUG -- :   [1m[35m (0.6ms)[0m  [1m[35mALTER TABLE "users" ADD "password_sent" bool DEFAULT 'f'[0m
+D, [2021-01-24T17:21:55.794748 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mALTER TABLE "users" ADD "password_sent_at" timestamp[0m
+D, [2021-01-24T17:21:55.795800 #4044] DEBUG -- :   [1m[35mSQL (0.2ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200315005916"]]
+D, [2021-01-24T17:21:55.796500 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.796595 #4044]  INFO -- : Migrating to ChangeScoreToFloat (20200316170115)
+D, [2021-01-24T17:21:55.797815 #4044] DEBUG -- :   [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.803595 #4044] DEBUG -- :   [1m[35m (5.3ms)[0m  [1m[35mALTER TABLE "corrections" ALTER COLUMN "score" TYPE float[0m
+D, [2021-01-24T17:21:55.805026 #4044] DEBUG -- :   [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200316170115"]]
+D, [2021-01-24T17:21:55.807260 #4044] DEBUG -- :   [1m[35m (1.9ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.807349 #4044]  INFO -- : Migrating to AddIsActiveToUser (20200322062746)
+D, [2021-01-24T17:21:55.808689 #4044] DEBUG -- :   [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.810655 #4044] DEBUG -- :   [1m[35m (0.8ms)[0m  [1m[35mALTER TABLE "users" ADD "is_active" bool DEFAULT 't'[0m
+D, [2021-01-24T17:21:55.812432 #4044] DEBUG -- :   [1m[35mSQL (0.4ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200322062746"]]
+D, [2021-01-24T17:21:55.813310 #4044] DEBUG -- :   [1m[35m (0.5ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.813493 #4044]  INFO -- : Migrating to ChangeCorrectionReviewScoreToFloat (20200406015836)
+D, [2021-01-24T17:21:55.815052 #4044] DEBUG -- :   [1m[35m (0.3ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.822880 #4044] DEBUG -- :   [1m[35m (7.5ms)[0m  [1m[35mALTER TABLE "correction_reviews" ALTER COLUMN "score_delta" TYPE float[0m
+D, [2021-01-24T17:21:55.824386 #4044] DEBUG -- :   [1m[35mSQL (0.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200406015836"]]
+D, [2021-01-24T17:21:55.827163 #4044] DEBUG -- :   [1m[35m (2.3ms)[0m  [1m[35mCOMMIT[0m
+I, [2021-01-24T17:21:55.827281 #4044]  INFO -- : Migrating to AddContainsAuthorDataToCorrections (20200406021323)
+D, [2021-01-24T17:21:55.829090 #4044] DEBUG -- :   [1m[35m (0.6ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.831255 #4044] DEBUG -- :   [1m[35m (0.9ms)[0m  [1m[35mALTER TABLE "corrections" ADD "contains_author_data" bool DEFAULT 'f' NOT NULL[0m
+D, [2021-01-24T17:21:55.834672 #4044] DEBUG -- :   [1m[35mSQL (1.3ms)[0m  [1m[32mINSERT INTO "schema_migrations" ("version") VALUES ($1) RETURNING "version"[0m  [["version", "20200406021323"]]
+D, [2021-01-24T17:21:55.835999 #4044] DEBUG -- :   [1m[35m (0.9ms)[0m  [1m[35mCOMMIT[0m
+D, [2021-01-24T17:21:55.842393 #4044] DEBUG -- :   [1m[36mActiveRecord::InternalMetadata Load (0.6ms)[0m  [1m[34mSELECT  "ar_internal_metadata".* FROM "ar_internal_metadata" WHERE "ar_internal_metadata"."key" = $1 LIMIT $2[0m  [["key", "environment"], ["LIMIT", 1]]
+D, [2021-01-24T17:21:55.852567 #4044] DEBUG -- :   [1m[35m (0.2ms)[0m  [1m[35mBEGIN[0m
+D, [2021-01-24T17:21:55.856368 #4044] DEBUG -- :   [1m[35mSQL (1.0ms)[0m  [1m[32mINSERT INTO "ar_internal_metadata" ("key", "value", "created_at", "updated_at") VALUES ($1, $2, $3, $4) RETURNING "key"[0m  [["key", "environment"], ["value", "production"], ["created_at", "2021-01-24 20:21:55.853055"], ["updated_at", "2021-01-24 20:21:55.853055"]]
+D, [2021-01-24T17:21:55.857602 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[35mCOMMIT[0m
+D, [2021-01-24T17:21:55.858263 #4044] DEBUG -- :   [1m[35m (0.4ms)[0m  [1m[34mSELECT pg_advisory_unlock(7211057457262037610)[0m

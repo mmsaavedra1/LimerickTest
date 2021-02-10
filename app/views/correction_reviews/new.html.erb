@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="col-md-12">
+    <h4 class="modal-title" id="myModalLabel"><%= "Ensayo #{@fourth_stage_schedule.assignment.number}" %></h4>
+    <%= form_with model: @correction_review do |f|%>
+      <%= f.hidden_field :assignment_schedule_id, value: @fourth_stage_schedule.id %>
+      <%= f.hidden_field :correction_id, value: @correction.id %>
+      <div class="form-group">
+        <%= f.text_area :student_comment, class: "form-control", placeholder: "Estoy enviando este ensayo a recorregir porque...", rows: "3"  %>
+      </div>
+      <%= f.submit :Enviar, class: "btn btn-primary"%>
+    </div>
+  <%end%>
+</div>

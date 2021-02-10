@@ -1,0 +1,24 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Corrected user:</strong>
+  <%= @correction.corrected_user %>
+</p>
+
+<p>
+  <strong>File:</strong>
+  <%= @correction.file %>
+</p>
+
+<p>
+  <strong>Score:</strong>
+  <%= @correction.score %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @correction.type %>
+</p>
+
+<%= link_to 'Edit', edit_correction_path(@correction) %> |
+<%= link_to 'Back', corrections_path %>

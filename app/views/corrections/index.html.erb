@@ -1,0 +1,71 @@
+<%= content_for(:title, "Ensayos") %>
+<div class="container">
+  <h3><b>Puntajes</b></h3>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Ensayo #</th>
+        <th scope="col">Etapa 2 - C1</th>
+        <th scope="col">Etapa 2 - C2</th>
+        <th scope="col">Etapa 3 - C1</th>
+        <th scope="col">Etapa 3 - C2</th>
+        <th scope="col">Reajuste por recorrección</th>
+        <th scope="col">Puntaje total</th>
+        <th scope="col">Status</th>
+        <th scope="col">Puntaje promedio</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @assignments.each do |a| %>
+        <% corrections = Correction.eager_load(assignment_schedule: :assignment).where("assignment_schedules.assignment_id = ? and corrected_id = ?", a.id, current_user.id) %>
+        <% second_stage_corrections = corrections.where("assignment_schedules.stage = ?", AssignmentSchedule.stages[:Segunda]) %>
+        <% third_stage_corrections = corrections.where("assignment_schedules.stage = ?", AssignmentSchedule.stages[:Tercera]) %>
+        <% reviews_score_delta = CorrectionReview.joins(:assignment_schedule, :correction ).where("assignment_schedules.assignment_id = ? and corrections.corrected_id = ? and corrections.score != -1 and corrections.score is not NULL", a.id, current_user.id).sum(:score_delta) %>
+        <% puntaje_final = reviews_score_delta %>
+        <tr>
+          <th scope="row"><%=a.number%></th>
+          <% if current_user.completed_process?(a.number) && a.finished_mandatory_stages? %>
+            <% if current_user.completed_second_stage? a.number %>
+              <% second_stage_corrections.each do |correction| %>
+                <% if (correction.score.nil? || correction.score == -1) && !correction.correction_review.nil? %>
+                  <% score = correction.correction_review.score_delta %>
+                <% else %>
+                  <% score = correction.score.nil? ? "NC" : correction.score %>
+                <% end %>
+                <td scope="row"><%= score %></td>
+                <% puntaje_final += score.is_a?(String) ? 0 : score %>
+              <% end %>
+            <% else %>
+              <td>-</td>
+              <td>-</td>
+            <% end %>
+            <% if current_user.completed_third_stage? a.number %>
+              <% third_stage_corrections.each do |correction| %>
+                <% score = correction.score.nil? ? 3 : correction.score %>
+                <td scope="row"><%= score %></td>
+                <% puntaje_final += score %>
+              <% end %>
+              <td scope="row"><%= reviews_score_delta %></td>
+              <th scope="col"><%= puntaje_final %></th>
+              <td><%= current_user.process_status(a.number) %></td>
+              <td><%= a.get_average a.number %></td>
+            <% else %>
+              <td>-</td>
+              <td>-</td>
+              <td>-</td>
+            <% end %>
+          <% else %>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <td>-</td>
+            <th><%= current_user.process_status(a.number) %></th>
+            <td><%= a.get_average a.number %></td>
+          <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
